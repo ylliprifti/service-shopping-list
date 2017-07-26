@@ -1,0 +1,16 @@
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\bin\Debug\Checkout.dll.config
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\bin\Debug\Checkout.dll
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\bin\Debug\Checkout.pdb
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\bin\Debug\Newtonsoft.Json.dll
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\bin\Debug\Newtonsoft.Json.xml
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\obj\Debug\Checkout.ApiClient.Net45.csprojResolveAssemblyReference.cache
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\obj\Debug\Checkout.dll
+C:\Dev\Checkout.Com\checkout-net-library\Checkout.ApiClient.Net45\obj\Debug\Checkout.pdb
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\obj\Debug\Checkout.dll
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\obj\Debug\Checkout.pdb
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\bin\Debug\Checkout.dll.config
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\bin\Debug\Checkout.dll
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\bin\Debug\Checkout.pdb
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\bin\Debug\Newtonsoft.Json.dll
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\bin\Debug\Newtonsoft.Json.xml
+C:\Dev\Checkout.Com\service-shopping-list\Checkout.ApiClient.Net45\obj\Debug\Checkout.ApiClient.Net45.csprojResolveAssemblyReference.cache

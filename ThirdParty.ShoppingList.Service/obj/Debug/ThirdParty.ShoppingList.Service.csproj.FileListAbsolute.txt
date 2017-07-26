@@ -1,0 +1,5 @@
+C:\Dev\Checkout.Com\ThirdParty.ShoppingList.Service\bin\Debug\ThirdParty.ShoppingList.Service.dll
+C:\Dev\Checkout.Com\ThirdParty.ShoppingList.Service\bin\Debug\ThirdParty.ShoppingList.Service.pdb
+C:\Dev\Checkout.Com\ThirdParty.ShoppingList.Service\obj\Debug\ThirdParty.ShoppingList.Service.csprojResolveAssemblyReference.cache
+C:\Dev\Checkout.Com\ThirdParty.ShoppingList.Service\obj\Debug\ThirdParty.ShoppingList.Service.dll
+C:\Dev\Checkout.Com\ThirdParty.ShoppingList.Service\obj\Debug\ThirdParty.ShoppingList.Service.pdb

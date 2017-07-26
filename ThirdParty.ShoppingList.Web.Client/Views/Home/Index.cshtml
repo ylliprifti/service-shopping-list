@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewBag.Title = "Shopping List";
+}
+
+<div class="form" ng-app="shoppinglist" ng-controller="MainController">
+
+         <ul class="tab-group" >
+            <li class="tab" ng-class="{'active': isLogin}"><a href="#login" ng-click="loginTab()" style="font-size: 14px">Log In</a></li>
+            <li class="tab" ng-class="{'active': !isLogin}"><a href="#signup" ng-click="shoppingListTab()" style="font-size: 14px">Shopping List</a></li>
+         </ul>
+
+        <div class="tab-content">
+        <div id="login">
+            <h1>{{message}}</h1>
+
+            <form>
+
+                <div class="field-wrap">
+                    <label>
+                        Username<span class="req">*</span>
+                    </label>
+                    <input type="text" autocomplete="off" ng-model="username" />
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Password<span class="req">*</span>
+                    </label>
+                    <input type="password" required autocomplete="off" ng-model="password" />
+                </div>
+
+                <p class="forgot">
+                    <a href="#">
+                        User <b style="color:red">admin/admin</b>
+                        @*for Read Write.User <b style="color:red">user/user</b> for readonly*@
+                    </a>
+                </p>
+
+                <button class="button button-block" style="cursor:pointer" ng-click="login()" ng-disabled="loading" ng-class="{'disabled': loading}"> {{ btnText("Log in") }}</button>
+
+            </form>
+
+        </div>
+        <div id="signup">
+            <h1>{{slMessage}}</h1>
+
+
+                <div class="field-wrap">
+                <button ng-click="getAllProducts()" class="button button-block"><i class="glyphicon glyphicon-plus"></i> Show All</button>
+                <textarea rows="5">
+                    {{allItems}}
+                </textarea>
+            </div>
+           
+                <div class="top-row">
+                    <div class="field-wrap">
+                        <label>
+                            Name<span class="req">*</span>
+                        </label>
+                        <input type="text" required autocomplete="off" ng-model="productAdd.Name" />
+                    </div>
+
+                    <div class="field-wrap">
+                        <label>
+                            Quantity<span class="req">*</span>
+                        </label>
+                        <input type="number" required autocomplete="off" ng-model="productAdd.Quantity" />
+                    </div>
+                </div>
+                <div class="field-wrap">
+                    <button ng-click="addProduct()" class="button button-block" ><i class="glyphicon glyphicon-plus"></i> Add</button>
+                </div>
+
+                <div class="top-row">
+                    <div class="field-wrap">
+                        <label>
+                            Name<span class="req">*</span>
+                        </label>
+                        <input type="text" required autocomplete="off" ng-model="productUpdate.Name" />
+                    </div>
+
+                    <div class="field-wrap">
+                        <label>
+                            Quantity<span class="req">*</span>
+                        </label>
+                        <input type="number" required autocomplete="off" ng-model="productUpdate.Quantity" />
+                    </div>
+                </div>
+                <div class="field-wrap">
+                    <button ng-click="updateProduct()" class="button button-block"><i class="glyphicon glyphicon-plus"></i> Update</button>
+                </div>
+
+                <div class="top-row">
+                <div class="field-wrap">
+                    <label>
+                        Name<span class="req">*</span>
+                    </label>
+                    <input type="text" required autocomplete="off" ng-model="productGet.Name" />
+                </div>
+
+                <div class="field-wrap">
+
+                    <input type="number" readonly disabled autocomplete="off" ng-model="productGet.Quantity" />
+                </div>
+            </div>
+                <div class="field-wrap">
+                <button ng-click="getProduct()" class="button button-block"><i class="glyphicon glyphicon-plus"></i> Show Quantity</button>
+            </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Name<span class="req">*</span>
+                    </label>
+                    <input type="text" required autocomplete="off" ng-model="productDelete.Name" />
+                </div>
+                <div class="field-wrap">
+                    <button ng-click="deleteProduct()" class="button button-block"><i class="glyphicon glyphicon-plus"></i> Delete</button>
+                </div>
+
+               
+
+            
+        </div>
+
+        
+
+    </div><!-- tab-content -->
+
+</div> <!-- /form -->
+<script src="~/Scripts/angular.js"></script>
+<script type="text/javascript">
+    var app = angular.module('shoppinglist', []);
+    app.controller("MainController", ['$scope', '$http', '$window', '$timeout', function ($scope, $http, $window, $timeout) {
+        $scope.token = '';
+        $scope.username = '';
+        $scope.password = '';
+        $scope.message = 'Please Login!';
+        $scope.slMessage = 'Shopping List';
+        $scope.allItems = '';
+        $scope.isLogin = true;
+        $scope.loading = false;
+
+        $scope.productAdd = {}
+        $scope.productUpdate = {}
+        $scope.productDelete = {}
+        $scope.productGet = {}
+
+        $scope.btnText = function (main) {
+            if ($scope.loading) return "Please wiat!";
+            return main;
+        }
+
+        $scope.login = function () {
+            $scope.loading = true;
+            $http({
+                method: 'POST',
+                url: '/web/api/home/login/'+$scope.username+'/'+$scope.password,
+                data: { }
+            }).then(function successCallback(response) {
+                $scope.token = response.data;
+                $scope.loading = false;
+                if ($scope.token.length > 10)
+                {
+                    $scope.username = '';
+                    $scope.password = '';
+                    $scope.message = 'Welcome Back!';
+                    $scope.isLogin = false;
+                    $scope.getAllProducts();
+                    $timeout(function () { $(".tab.active > a").trigger('click'); }, 500);
+                } else $scope.message = 'Try Again!';
+            }, function errorCallback(response) {
+                $scope.loading = false;
+            });
+        }
+
+        $scope.addProduct = function () {
+            if (!$scope.productAdd.Name || !$scope.productAdd.Quantity)
+            {
+                $scope.slMessage = 'Verify input!'
+                return;
+            }
+
+            $http({
+                method: 'POST',
+                url: '/web/api/home/AddItem',
+                data: $scope.productAdd
+            }).then(function successCallback(response) {
+
+                $scope.slMessage = response.data;
+                $scope.productAdd = {};
+                $scope.getAllProducts();
+                
+            }, function errorCallback(responsse) {
+                $scope.slMessage = response.error;
+            });
+
+        }
+
+        $scope.updateProduct = function () {
+            if (!$scope.productUpdate.Name || !$scope.productUpdate.Quantity) {
+                $scope.slMessage = 'Verify input!'
+                return;
+            }
+
+            $http({
+                method: 'POST',
+                url: '/web/api/home/UpdateItem',
+                data: $scope.productUpdate
+            }).then(function successCallback(response) {
+
+                $scope.slMessage = response.data;
+                $scope.productUpdate = {};
+                $scope.getAllProducts();
+
+            }, function errorCallback(responsse) {
+                $scope.slMessage = response.error;
+            });
+
+        }
+
+        $scope.deleteProduct = function () {
+            if (!$scope.productDelete.Name) {
+                $scope.slMessage = 'Verify input!'
+                return;
+            }
+
+            $http({
+                method: 'POST',
+                url: '/web/api/home/DeleteItem/' + $scope.productDelete.Name,
+                data: {}
+            }).then(function successCallback(response) {
+
+                $scope.slMessage = response.data;
+                $scope.productDelete = {};
+                $scope.getAllProducts();
+                $window.scrollTo(0, 0);
+              
+
+            }, function errorCallback(responsse) {
+                $scope.slMessage = response.error;
+            });
+
+        }
+
+
+        $scope.getProduct = function () {
+            if (!$scope.productGet.Name) {
+                $scope.slMessage = 'Verify input!'
+                return;
+            }
+
+            $http({
+                method: 'GET',
+                url: '/web/api/home/Item/' + $scope.productGet.Name,
+                data: {}
+            }).then(function successCallback(response) {
+                if (angular.isString(response.data)) {
+                    $scope.slMessage = response.data;
+                    $scope.productGet = {};
+                    $window.scrollTo(0, 0); 
+                    return;
+                }
+                $scope.slMessage = 'Get Successful'
+                $scope.productGet.Quantity = response.data.Quantity
+
+            }, function errorCallback(responsse) {
+                $scope.slMessage = response.error;
+            });
+
+        }
+
+        $scope.getAllProducts = function () {
+           
+
+            $http({
+                method: 'GET',
+                url: '/web/api/home/Items/',
+                data: {}
+            }).then(function successCallback(response) {
+                if (angular.isString(response.data)) {
+                    $scope.slMessage = response.data;
+                    $window.scrollTo(0, 0);
+                    return;
+                }
+                $scope.slMessage = 'Get Successful'
+                $scope.allItems = '';
+                if (response.data.length == 0) {
+                    $scope.allItems = '\Empty';
+                    return;
+                }
+                $(response.data).each(function (index, item) {
+                    $scope.allItems += "\nName :" + item.Name + "\t Quantiy :" + item.Quantity;
+                });
+
+            }, function errorCallback(responsse) {
+                $scope.slMessage = response.error;
+            });
+
+        }
+
+ 
+
+
+        $scope.shoppingListTab = function () {
+            if (!$scope.token) {
+                $scope.isLogin = true;
+                $scope.message = 'Please Login!';
+                $timeout(function () { $(".tab.active > a").trigger('click'); }, 500);
+            }
+        }
+
+        $scope.loginTab = function () {
+        }
+
+        $window.$scope = $scope;
+    }]);
+</script>
