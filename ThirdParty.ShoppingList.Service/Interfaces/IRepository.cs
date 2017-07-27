@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ThirdParty.ShoppingList.Service.Interfaces
 {
-    public interface IRepository<T> where T: class, new()
+    public interface IRepository<IItem>
     {
-        bool Insert(T item);
-        bool Update(T item);
-        bool Delete(T item);
-        T Get(T item);
-        IEnumerable<T> Get();
+        bool Insert(IItem item);
+        bool Update(IItem item);
+        bool Delete(IItem item);
+        IItem Get(IItem item);
+        IEnumerable<IItem> Get();
     
     }
 }

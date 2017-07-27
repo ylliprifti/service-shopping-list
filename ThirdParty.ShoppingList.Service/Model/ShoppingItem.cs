@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ThirdParty.ShoppingList.Service.Model
 {
-    public class ShoppingItem
+    public class ShoppingItem : Interfaces.IItem
     {
         public ShoppingItem() { }
         public ShoppingItem(string name, int quantity) {

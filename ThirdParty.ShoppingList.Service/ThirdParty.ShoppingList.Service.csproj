@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IItem.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="MemoryRepository.cs" />
+    <Compile Include="Interfaces\IStorage.cs" />
+    <Compile Include="MemoryCacheStorage.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="Model\ShoppingItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

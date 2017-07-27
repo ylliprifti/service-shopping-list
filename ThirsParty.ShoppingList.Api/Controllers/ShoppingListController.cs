@@ -5,17 +5,25 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Web.Http;
-using ThirdParty.ShoppingList.Service;
-using ThirdParty.ShoppingList.Service.Model;
+using TP=ThirdParty.ShoppingList.Service;
+using TPM=ThirdParty.ShoppingList.Service.Model;
+using TPI = ThirdParty.ShoppingList.Service.Interfaces;
+
 
 namespace ThirdParty.ShoppingList.Api.Controllers
 {
     public class ShoppingListController : ApiController
     {
 
+        private readonly TPI.IRepository<TPI.IItem> _repository;
+
+        public ShoppingListController(TPI.IRepository<TPI.IItem> repository) {
+            _repository = repository;
+        }
+        
         [AllowAnonymous]
         [HttpGet]
-        [Route("api/data/forall")]
+        [Route("api/data/status")]
         public IHttpActionResult GetAnonymous()
         {
             return Ok("Now server time is: " + DateTime.Now.ToString());
@@ -42,16 +50,12 @@ namespace ThirdParty.ShoppingList.Api.Controllers
                         .Select(c => c.Value);
             return Ok("Hello " + identity.Name + " Role: " + string.Join(",", roles.ToList()));
         }
-
-        private MemoryRepository _repository = new MemoryRepository();
-
-
-
+        
         [Authorize]
         [Route("api/shoppinglist/{name}")]
         public IHttpActionResult Get(string name)
         {
-              return Ok( _repository.Get(new ShoppingItem { Name = name }));
+              return Ok( _repository.Get(new TPM.ShoppingItem { Name = name }));
         }
 
         [Authorize]
@@ -61,13 +65,13 @@ namespace ThirdParty.ShoppingList.Api.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public IHttpActionResult Post([FromBody]ShoppingItem value)
+        public IHttpActionResult Post([FromBody]TPM.ShoppingItem value)
         {
           return Ok(_repository.Insert(value));
         }
 
         [Authorize(Roles = "admin")]
-        public IHttpActionResult Put([FromBody]ShoppingItem value)
+        public IHttpActionResult Put([FromBody]TPM.ShoppingItem value)
         {
              return Ok(_repository.Update(value));
         }
@@ -77,7 +81,7 @@ namespace ThirdParty.ShoppingList.Api.Controllers
         [HttpDelete]
         public IHttpActionResult Delete(string name)
         {
-           return Ok(_repository.Delete(new ShoppingItem { Name = name }));
+           return Ok(_repository.Delete(new TPM.ShoppingItem { Name = name }));
         }
     }
 }
