@@ -36,7 +36,15 @@
         private static string _recurringCustomerPaymentPlanSearchApiUri;
         private static string _recurringCustomerPaymentPlanApiUri;
         private static string _visaCheckout;
+
+
         private static string _shoppingListApiUrl;
+        private static string _shoppingListInsertApiUrl;
+        private static string _shoppingListGetApiUrl;
+        private static string _shoppingListGetAllApiUrl;
+        private static string _shoppingListDeleteApiUrl;
+        private static string _shoppingListUpdateApiUrl;
+        
 
         public static void ResetApiUrls()
         {
@@ -71,10 +79,31 @@
             _localPaymentChargesApiUri = null;
             _shoppingListApiUrl = null;
         }
-
+        
 
         public static string ShoppingList =>
-                _shoppingListApiUrl ?? (_shoppingListApiUrl =  string.Format("{0}/{1}", AppSettings.ShoppingListApiUrl, ""));
+                _shoppingListApiUrl ?? (_shoppingListApiUrl =   string.Concat(AppSettings.ShoppingListApiUrl, "/"));
+
+        private static string ShoppingListBase => string.Concat(ShoppingList, "api/shoppinglist");
+        private static string ShoppingListBaseParam => string.Concat(ShoppingList, "api/shoppinglist/{0}");
+
+
+        public static string ShoppingListInsert => 
+            _shoppingListInsertApiUrl ?? (_shoppingListInsertApiUrl = ShoppingListBase);
+
+        public static string ShoppingListGet =>
+            _shoppingListGetApiUrl ?? (_shoppingListGetApiUrl = ShoppingListBaseParam);
+
+        public static string ShoppingListGetAll =>
+            _shoppingListGetAllApiUrl ?? (_shoppingListGetAllApiUrl = ShoppingListBase);
+
+        public static string ShoppingListDelete =>
+            _shoppingListDeleteApiUrl ?? (_shoppingListDeleteApiUrl = ShoppingListBaseParam);
+
+        public static string ShoppingListUpdate =>
+            _shoppingListUpdateApiUrl ?? (_shoppingListUpdateApiUrl = ShoppingListBase);
+
+
 
         public static string Charges
             => _chargesApiUri ?? (_chargesApiUri = string.Concat(AppSettings.BaseApiUri, "/charges"));

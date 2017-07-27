@@ -32,7 +32,7 @@ namespace Checkout.ApiServices.ShoppingList
                     using (var responseContent = response.Content)
                     {
                         var resultString = await responseContent.ReadAsStringAsync();
-                        //resultString.Wait();
+
                         var token = JsonConvert.DeserializeObject<Models.TokenModel>(resultString);
                         return new HttpResponse<Models.TokenModel>(token);
                     }
@@ -44,110 +44,50 @@ namespace Checkout.ApiServices.ShoppingList
 
         public async Task<HttpResponse<bool>> AddItem(string token, ShoppingItem shoppingItem)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/shoppinglist");
-            var jsonString = JsonConvert.SerializeObject(shoppingItem);
-            request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ApiUrls.ShoppingList);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.SendAsync(request).Result)
-                {
-                    using (var responseContent = response.Content)
-                    {
-                        var resultString = await responseContent.ReadAsStringAsync();
-                        var item = JsonConvert.DeserializeObject<bool>(resultString);
-                        return new HttpResponse<bool>(item);
-                    }
-                }
-
-            }
+            return new ApiHttpClient().PostRequest<bool>(ApiUrls.ShoppingListInsert, token, shoppingItem, true);
         }
 
         public async Task<HttpResponse<bool>> UpdateItem(string token, ShoppingItem shoppingItem)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, "api/shoppinglist");
-            var jsonString = JsonConvert.SerializeObject(shoppingItem);
-            request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return new ApiHttpClient().PutRequest<bool>(ApiUrls.ShoppingListUpdate, token, shoppingItem, true);
 
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ApiUrls.ShoppingList);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.SendAsync(request).Result)
-                {
-                    using (var responseContent = response.Content)
-                    {
-                        var resultString = await responseContent.ReadAsStringAsync();
-                        var item = JsonConvert.DeserializeObject<bool>(resultString);
-                        return new HttpResponse<bool>(item);
-                    }
-                }
+            #region [Alternatively create the request and client and run it with await]
+            //var request = new HttpRequestMessage(HttpMethod.Put, "api/shoppinglist");
+            //var jsonString = JsonConvert.SerializeObject(shoppingItem);
+            //request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            }
+            //using (var client = new HttpClient())
+            //{
+            //    client.BaseAddress = new Uri(ApiUrls.ShoppingList);
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //    using (var response = client.SendAsync(request).Result)
+            //    {
+            //        using (var responseContent = response.Content)
+            //        {
+            //            var resultString = await responseContent.ReadAsStringAsync();
+            //            var item = JsonConvert.DeserializeObject<bool>(resultString);
+            //            return new HttpResponse<bool>(item);
+            //        }
+            //    }
+
+            //} 
+            #endregion
         }
 
         public async Task<HttpResponse<bool>> DeleteItem(string token, string name)
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, string.Format("api/shoppinglist/{0}", name));
-            
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ApiUrls.ShoppingList);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.SendAsync(request).Result)
-                {
-                    using (var responseContent = response.Content)
-                    {
-                        var resultString = await responseContent.ReadAsStringAsync();
-                        var item = JsonConvert.DeserializeObject<bool>(resultString);
-                        return new HttpResponse<bool>(item);
-                    }
-                }
-
-            }
+            return new ApiHttpClient().DeleteRequest<bool>(string.Format(ApiUrls.ShoppingListDelete, name), token, true);
         }
 
         public async Task<HttpResponse<IEnumerable<Models.ShoppingItem>>> GetItems(string token)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/shoppinglist");
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ApiUrls.ShoppingList);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.SendAsync(request).Result)
-                {
-                    using (var responseContent = response.Content)
-                    {
-                        var resultString = await responseContent.ReadAsStringAsync();
-                        var item = JsonConvert.DeserializeObject<IEnumerable<Models.ShoppingItem>>(resultString);
-                        return new HttpResponse<IEnumerable<Models.ShoppingItem>>(item);
-                    }
-                }
-
-            }
+            return new ApiHttpClient().GetRequest<IEnumerable<Models.ShoppingItem>>(ApiUrls.ShoppingListGetAll, token, true);
         }
 
         public async Task<HttpResponse<Models.ShoppingItem>> GetItem(string token, string itemname)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, string.Format("api/shoppinglist/{0}", itemname));
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ApiUrls.ShoppingList);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.SendAsync(request).Result)
-                {
-                    using (var responseContent = response.Content)
-                    {
-                        var resultString = await responseContent.ReadAsStringAsync();
-                        var item = JsonConvert.DeserializeObject<Models.ShoppingItem>(resultString);
-                        return new HttpResponse<Models.ShoppingItem>(item);
-                    }
-                }
-
-            }
-            }
+            return new ApiHttpClient().GetRequest<Models.ShoppingItem>(string.Format(ApiUrls.ShoppingListGet, itemname), token, true);
+            
         }
+    }
 }

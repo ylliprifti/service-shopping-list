@@ -64,6 +64,10 @@ namespace Checkout
             { httpClient.DefaultRequestHeaders.Add(name, value); }
         }
 
+        public void SetHttpRequestBearerAuthHeaders(string token) {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
         public string GetHttpRequestHeader(string name)
         {
             IEnumerable<string> values = null;
@@ -79,7 +83,7 @@ namespace Checkout
         /// <summary>
         /// Submits a get request to the given web address with default content type e.g. text/plain
         /// </summary>
-        public HttpResponse<T> GetRequest<T>(string requestUri,string authenticationKey)
+        public HttpResponse<T> GetRequest<T>(string requestUri,string authenticationKey, bool useBearerToken = false)
         {
             var httpRequestMsg = new HttpRequestMessage();
 
@@ -87,7 +91,8 @@ namespace Checkout
             httpRequestMsg.RequestUri = new Uri(requestUri);
             httpRequestMsg.Headers.Add("Accept", AppSettings.DefaultContentType);
 
-            SetHttpRequestHeader("Authorization", authenticationKey);
+            if (!useBearerToken) SetHttpRequestHeader("Authorization", authenticationKey);
+            else SetHttpRequestBearerAuthHeaders(authenticationKey);
 
             if (AppSettings.DebugMode)
             {
@@ -100,15 +105,16 @@ namespace Checkout
         /// <summary>
         /// Submits a post request to the given web address
         /// </summary>
-        public HttpResponse<T> PostRequest<T>(string requestUri,string authenticationKey, object requestPayload = null)
+        public HttpResponse<T> PostRequest<T>(string requestUri,string authenticationKey, object requestPayload = null, bool useBearerToken = false)
         {
             var httpRequestMsg = new HttpRequestMessage(HttpMethod.Post, requestUri);
             var requestPayloadAsString = GetObjectAsString(requestPayload);
 
             httpRequestMsg.Content = new StringContent(requestPayloadAsString, Encoding.UTF8, AppSettings.DefaultContentType);
             httpRequestMsg.Headers.Add("Accept", AppSettings.DefaultContentType);
-            
-            SetHttpRequestHeader("Authorization", authenticationKey);
+
+            if (!useBearerToken) SetHttpRequestHeader("Authorization", authenticationKey);
+            else SetHttpRequestBearerAuthHeaders(authenticationKey);
             
             if (AppSettings.DebugMode)
             {
@@ -122,7 +128,7 @@ namespace Checkout
         /// <summary>
         /// Submits a put request to the given web address
         /// </summary>
-        public HttpResponse<T> PutRequest<T>(string requestUri, string authenticationKey, object requestPayload = null)
+        public HttpResponse<T> PutRequest<T>(string requestUri, string authenticationKey, object requestPayload = null, bool useBearerToken = false)
         {
             var httpRequestMsg = new HttpRequestMessage(HttpMethod.Put, requestUri);
             var requestPayloadAsString = GetObjectAsString(requestPayload);
@@ -130,7 +136,8 @@ namespace Checkout
             httpRequestMsg.Content = new StringContent(requestPayloadAsString, Encoding.UTF8, AppSettings.DefaultContentType);
             httpRequestMsg.Headers.Add("Accept", AppSettings.DefaultContentType);
 
-            SetHttpRequestHeader("Authorization", authenticationKey);
+            if (!useBearerToken) SetHttpRequestHeader("Authorization", authenticationKey);
+            else SetHttpRequestBearerAuthHeaders(authenticationKey);
 
             if (AppSettings.DebugMode)
             {
@@ -144,7 +151,7 @@ namespace Checkout
         /// <summary>
         /// Submits a delete request to the given web address
         /// </summary>
-        public HttpResponse<T> DeleteRequest<T>(string requestUri, string authenticationKey)
+        public HttpResponse<T> DeleteRequest<T>(string requestUri, string authenticationKey, bool useBearerToken = false)
         {
             var httpRequestMsg = new HttpRequestMessage();
 
@@ -152,7 +159,8 @@ namespace Checkout
             httpRequestMsg.RequestUri = new Uri(requestUri);
             httpRequestMsg.Headers.Add("Accept", AppSettings.DefaultContentType);
 
-            SetHttpRequestHeader("Authorization", authenticationKey);
+            if (!useBearerToken) SetHttpRequestHeader("Authorization", authenticationKey);
+            else SetHttpRequestBearerAuthHeaders(authenticationKey);
 
             if (AppSettings.DebugMode)
             {

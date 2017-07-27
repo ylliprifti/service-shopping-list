@@ -261,7 +261,7 @@
                     $window.scrollTo(0, 0); 
                     return;
                 }
-                $scope.slMessage = 'Get Successful'
+                //$scope.slMessage = 'Get Successful'
                 $scope.productGet.Quantity = response.data.Quantity
 
             }, function errorCallback(responsse) {
@@ -283,7 +283,7 @@
                     $window.scrollTo(0, 0);
                     return;
                 }
-                $scope.slMessage = 'Get Successful'
+                //$scope.slMessage = 'Get Successful'
                 $scope.allItems = '';
                 if (response.data.length == 0) {
                     $scope.allItems = '\Empty';
